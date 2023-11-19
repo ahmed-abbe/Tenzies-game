@@ -8,6 +8,7 @@ body {
     font-family: "Arial", "Helvetica", "sans-serif";
 }
 main {
+    padding: 15px;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -28,23 +29,6 @@ main {
     flex-direction: column;
     justify-content: center;
 }
-.game .highscore {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: -22px -20px 22px;
-    text-transform: capitalize;
-}
-.game .highscore div {
-    width: fit-content;
-    background-color: black;
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    padding: 6px 10px;
-    border-radius: 6px;
-}
 .game .info {
     text-align: center;
 }
@@ -58,10 +42,41 @@ main {
     color: #4a4e74;
     margin: 7px auto 30px;
 }
+.game .detail {
+    margin-bottom: 15px;
+    text-transform: capitalize;
+}
+.game .detail .highscore {
+    width: fit-content;
+    margin-inline: auto;
+    padding: 10px 15px;
+    border-radius: 8px;
+    background-color: rgb(255 193 7 / 20%);
+    color: rgb(255 152 0);
+}
+.game .detail .highscore span {
+    margin-left: 7px;
+    font-weight: bold;
+}
+.game .detail .current {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.game .detail .current span {
+    background-color: black;
+    color: white;
+    padding: 6px 8px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
 .game .container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    display: flex;
+    flex-flow: wrap;
     gap: 18px;
+    justify-content: center;
     user-select: none;
 }
 .game .container.unactive {
@@ -69,6 +84,7 @@ main {
 }
 .game [class*="die"] {
     height: 50px;
+    width: 50px;
     padding: 5px;
     background-color: white;
     display: flex;

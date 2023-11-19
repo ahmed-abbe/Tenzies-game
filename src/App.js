@@ -6,7 +6,10 @@ const App = () => {
     const [dice, setDice] = useState(() => allNewDice());
     const [tenzies, setTenzies] = useState(false);
     const [roll, setRoll] = useState(0);
-    const [time, setTime] = useState(() => Date.now());
+    const [time, setTime] = useState(0);
+    const [counter, setCounter] = useState(0);
+
+    // variabel to clear setInterval
 
     // Function to change isHeld value on click
     function holdDice(id) {
@@ -15,51 +18,49 @@ const App = () => {
                 die.id === id ? { ...die, isHeld: !die.isHeld } : die
             )
         );
+        if (!counter) {
+            setCounter(updateTime(setTime));
+        }
     }
 
     useEffect(() => {
+        // Get highscore from local storage
         let highscore = JSON.parse(localStorage.getItem("highscore"));
-        let highscoreElement = document.querySelector(
-            ".game .highscore div:first-of-type"
-        );
+        let bestTimeElement = document.querySelector(".game .highscore span");
 
-        let rollElement = document.querySelector(
-            ".game .highscore div:last-of-type"
-        );
-
+        // check if highscore exist
         if (highscore) {
-            highscoreElement.textContent = `
-            best time: ${highscore.mins.toString().padStart(2, "0")}:${(
-                highscore.seconds % 60
-            )
-                .toString()
-                .padStart(2, "0")} `;
+            bestTimeElement.textContent = `
+            best time: ${formatTime(highscore.seconds)} `;
         } else {
-            highscoreElement.textContent = "No highscore";
+            bestTimeElement.textContent = "No highscore";
         }
 
-        rollElement.textContent = `roll: ${roll}`;
-
         if (tenzies) {
+            // when tenzies is true set back all state to default
             changeState(setTenzies);
 
             setRoll(0);
 
-            setTime(Date.now());
+            setTime(0);
 
-            rollElement.textContent = `roll: 0`;
+            setCounter(0);
         } else if (
             dice.every(function (die) {
                 return die.isHeld && die.value === this;
             }, dice[0].value)
         ) {
+            // if all dice has the same value update the state
             changeState(setTenzies);
 
-            updateScore(Date.now() - time, highscore);
+            updateScore(time, highscore);
+
+            clearInterval(counter);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dice]);
 
+    // create all dice elements
     let diceElements = dice.map((die) => (
         <Die
             key={die.id}
@@ -68,19 +69,26 @@ const App = () => {
             handleClick={() => holdDice(die.id, die.value)}
         />
     ));
+
     return (
         <main>
             <section className="game">
-                <div className="highscore">
-                    <div></div>
-                    <div></div>
-                </div>
                 <div className="info">
                     <h1>Tenzies</h1>
                     <p>
                         Roll until all dice are the same. Click each die to
                         freeze it at its current value between rolls.
                     </p>
+                </div>
+                <div className="detail">
+                    <div className="highscore">
+                        <i className="fa-solid fa-trophy"></i>
+                        <span></span>
+                    </div>
+                    <div className="current">
+                        <span className="roll">roll: {roll}</span>
+                        <span className="time">Time: {formatTime(time)}</span>
+                    </div>
                 </div>
                 <div className="container">{diceElements}</div>
                 {tenzies ? (
@@ -142,11 +150,12 @@ function changeState(setTenzies) {
     setTenzies((prev) => !prev);
     document.querySelector(".game .container").classList.toggle("unactive");
 }
+
+// Function to update highscore
 function updateScore(time, highscore) {
-    let seconds = Math.round(time / 1000);
-    let mins = Math.round(seconds / 60);
+    let seconds = time;
+
     let current = {
-        mins: mins,
         seconds: seconds,
     };
 
@@ -157,4 +166,21 @@ function updateScore(time, highscore) {
     } else {
         localStorage.setItem("highscore", JSON.stringify(current));
     }
+}
+
+// Function to update time every second
+function updateTime(setTime) {
+    let counter = setInterval(() => {
+        setTime((seconds) => ++seconds);
+    }, 1000);
+    return counter;
+}
+
+// Function to format time into a string
+function formatTime(time) {
+    return `${Math.trunc(time / 60)
+        .toString()
+        .padStart(2, "0")}:${Math.trunc(time % 60)
+        .toString()
+        .padStart(2, "0")}`;
 }
