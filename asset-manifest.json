@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.js": "/Tenzies-game/static/js/main.428086a3.js",
+    "main.js": "/Tenzies-game/static/js/main.eb385bf3.js",
     "index.html": "/Tenzies-game/index.html",
-    "main.428086a3.js.map": "/Tenzies-game/static/js/main.428086a3.js.map"
+    "main.eb385bf3.js.map": "/Tenzies-game/static/js/main.eb385bf3.js.map"
   },
   "entrypoints": [
-    "static/js/main.428086a3.js"
+    "static/js/main.eb385bf3.js"
   ]
 }
